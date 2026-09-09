@@ -2,17 +2,32 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { EpfClient } from "../epf-client.js";
 
+const FILE_STATUS = ["N", "S", "X", "C"] as const;
+type FileStatus = (typeof FILE_STATUS)[number];
+
+function statusQuery(status: FileStatus[] | undefined): string | undefined {
+  if (!status || status.length === 0) return undefined;
+  return status.join(",");
+}
+
 export function registerDownloadTools(server: McpServer, client: EpfClient): void {
   server.registerTool(
     "epf_acs_list",
     {
-      description: "List ACS-keyed download files. Bearer auth required.",
-      inputSchema: {},
+      description:
+        "List ACS-keyed download files scoped to productId=PARENT. Bearer auth required. Optionally filter by status (N=new, S=started, X=cancelled, C=completed).",
+      inputSchema: {
+        status: z.array(z.enum(FILE_STATUS)).optional(),
+      },
     },
-    async () => {
+    async (args) => {
+      const query: Record<string, string> = { productId: "PARENT" };
+      const s = statusQuery(args.status);
+      if (s) query.status = s;
       const data = await client.request<unknown>({
         method: "GET",
         path: "/api/v2/download/acslist",
+        query,
       });
       return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
     },
@@ -22,23 +37,19 @@ export function registerDownloadTools(server: McpServer, client: EpfClient): voi
     "epf_download_list",
     {
       description:
-        "Request a download manifest from EPF. Body shape is derived from the OpenAPI snapshot at src/openapi-types.json.",
+        "List EPF download files scoped to productId=PARENT. Bearer auth required. Optionally filter by status (N=new, S=started, X=cancelled, C=completed).",
       inputSchema: {
-        refId: z.string().min(1),
-        source: z.string().optional(),
-        target: z.string().optional(),
-        subSource: z.string().optional(),
+        status: z.array(z.enum(FILE_STATUS)).optional(),
       },
     },
     async (args) => {
-      const body: Record<string, string> = { refId: args.refId };
-      if (args.source !== undefined) body.source = args.source;
-      if (args.target !== undefined) body.target = args.target;
-      if (args.subSource !== undefined) body.subSource = args.subSource;
+      const query: Record<string, string> = { productId: "PARENT" };
+      const s = statusQuery(args.status);
+      if (s) query.status = s;
       const data = await client.request<unknown>({
-        method: "POST",
-        path: "/epfupld/download/dnldlist",
-        body,
+        method: "GET",
+        path: "/api/v2/download/dnldlist",
+        query,
       });
       return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
     },
@@ -83,17 +94,18 @@ export function registerDownloadTools(server: McpServer, client: EpfClient): voi
   server.registerTool(
     "epf_update_status",
     {
-      description: "Update file status. Bearer auth required.",
+      description:
+        "Update file status. Bearer auth required. status: N=new, S=download started, X=cancelled, C=completed.",
       inputSchema: {
         fileId: z.string().min(1),
-        status: z.string().min(1),
+        status: z.enum(FILE_STATUS),
       },
     },
     async (args) => {
       const data = await client.request<unknown>({
         method: "POST",
         path: "/api/v2/download/status",
-        body: { fileId: args.fileId, status: args.status },
+        body: { fileid: args.fileId, newstatus: args.status },
       });
       return { content: [{ type: "text", text: JSON.stringify(data, null, 2) }] };
     },

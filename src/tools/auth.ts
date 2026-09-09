@@ -92,8 +92,13 @@ export function registerAuthTools(
           ],
         };
       }
+      const state = auth.current();
       try {
-        await client.request({ method: "POST", path: "/api/v2/epf/logout" });
+        await client.request({
+          method: "POST",
+          path: "/api/v2/epf/logout",
+          body: state?.email ? { email: state.email } : undefined,
+        });
       } catch (err) {
         if (!(err instanceof EpfError)) throw err;
       }

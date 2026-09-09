@@ -107,16 +107,13 @@ export async function startFakeEpf(
       return;
     }
 
-    if (req.method === "POST" && url.pathname === "/epfupld/download/dnldlist") {
+    if (req.method === "GET" && url.pathname === "/api/v2/download/dnldlist") {
       res.statusCode = 200;
       res.end(
-        JSON.stringify({
-          refId: parsed.refId,
-          files: [
-            { fileId: "dl-001", source: parsed.source ?? null, size: 12345 },
-            { fileId: "dl-002", source: parsed.source ?? null, size: 67890 },
-          ],
-        }),
+        JSON.stringify([
+          { fileId: "dl-001", source: "ACS", size: 12345 },
+          { fileId: "dl-002", source: "ACS", size: 67890 },
+        ]),
       );
       return;
     }
@@ -124,7 +121,11 @@ export async function startFakeEpf(
     if (req.method === "POST" && url.pathname === "/api/v2/download/status") {
       res.statusCode = 200;
       res.end(
-        JSON.stringify({ fileId: parsed.fileId, status: parsed.status, ok: true }),
+        JSON.stringify({
+          fileid: parsed.fileid,
+          newstatus: parsed.newstatus,
+          ok: true,
+        }),
       );
       return;
     }

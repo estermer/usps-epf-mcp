@@ -107,7 +107,8 @@ export class EpfClient {
     if (!state) {
       throw new EpfError(401, `GET /api/v2/download/epf/${fileId}`, "not authenticated");
     }
-    const url = new URL(`/api/v2/download/epf/${encodeURIComponent(safeId)}`, this.baseUrl);
+    const baseHref = this.baseUrl.endsWith("/") ? this.baseUrl : `${this.baseUrl}/`;
+    const url = new URL(`api/v2/download/epf/${encodeURIComponent(safeId)}`, baseHref);
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.timeoutMs);
     try {
@@ -156,7 +157,9 @@ export class EpfClient {
     if (!req.unauthenticated && !state) {
       throw new EpfError(401, `${req.method} ${req.path}`, "not authenticated");
     }
-    const url = new URL(req.path, this.baseUrl);
+    const baseHref = this.baseUrl.endsWith("/") ? this.baseUrl : `${this.baseUrl}/`;
+    const relativePath = req.path.replace(/^\/+/, "");
+    const url = new URL(relativePath, baseHref);
     if (req.query) {
       for (const [k, v] of Object.entries(req.query)) url.searchParams.set(k, v);
     }

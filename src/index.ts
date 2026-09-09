@@ -32,9 +32,10 @@ export async function boot(options: BootOptions = {}): Promise<{
     await auth.bootLogin({ username: cfg.username, password: cfg.password });
   } catch (err) {
     process.stderr.write(
-      `[EPF] boot login failed: ${err instanceof Error ? err.message : String(err)}\n`,
+      `[EPF] boot login failed (continuing unauthenticated): ${
+        err instanceof Error ? err.message : String(err)
+      }\n`,
     );
-    throw err;
   }
 
   const server = new McpServer(

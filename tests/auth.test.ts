@@ -70,14 +70,11 @@ describe("auth + tool surface", () => {
     expect(rig.epf.loginCount()).toBe(before + 1);
   });
 
-  it("epf_download_list forwards body fields", async () => {
-    const res = await rig.client.callTool({
-      name: "epf_download_list",
-      arguments: { refId: "R1", source: "ACS" },
-    });
-    const parsed = parseToolText(res as never) as { refId: string; files: unknown[] };
-    expect(parsed.refId).toBe("R1");
-    expect(parsed.files).toHaveLength(2);
+  it("epf_download_list returns parsed list", async () => {
+    const res = await rig.client.callTool({ name: "epf_download_list", arguments: {} });
+    const parsed = parseToolText(res as never) as Array<{ fileId: string }>;
+    expect(parsed).toHaveLength(2);
+    expect(parsed[0]?.fileId).toBe("dl-001");
   });
 
   it("epf_download_epf_file streams bytes to disk and returns metadata only", async () => {
@@ -106,10 +103,10 @@ describe("auth + tool surface", () => {
   it("epf_update_status echoes back the update", async () => {
     const res = await rig.client.callTool({
       name: "epf_update_status",
-      arguments: { fileId: "f-1", status: "DELIVERED" },
+      arguments: { fileId: "f-1", status: "C" },
     });
-    const parsed = parseToolText(res as never) as { fileId: string; status: string; ok: boolean };
-    expect(parsed).toEqual({ fileId: "f-1", status: "DELIVERED", ok: true });
+    const parsed = parseToolText(res as never) as { fileid: string; newstatus: string; ok: boolean };
+    expect(parsed).toEqual({ fileid: "f-1", newstatus: "C", ok: true });
   });
 
   it("epf_reauth re-runs login", async () => {
