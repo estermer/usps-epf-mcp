@@ -4,26 +4,53 @@ A local MCP server that lets an LLM (OpenCode, Claude, Cursor, …) interact wit
 USPS EPF V2 REST Services API. Read-only + auth helpers + status updates. No file
 uploads.
 
-## Quickstart
+## Install (recommended)
 
 ```bash
-cd ~/develop/usps-epf-mcp
+npx -y @estermer/usps-epf-mcp
+```
+
+No clone needed — `npx` fetches and caches the published package.
+
+## Install (from source)
+
+```bash
+git clone https://github.com/estermer/usps-epf-mcp.git
+cd usps-epf-mcp
 npm install
 npm run build
 ```
 
-Create `~/.config/opencode/opencode.jsonc` (or merge into existing `mcp` block):
+## MCP Config
+
+**opencode** (`~/.config/opencode/opencode.jsonc`):
 
 ```jsonc
 {
   "mcp": {
     "epf": {
       "type": "local",
-      "command": ["node", "~/develop/usps-epf-mcp/dist/index.js"],
+      "command": ["npx", "-y", "@estermer/usps-epf-mcp"],
       "environment": {
         "EPF_USERNAME": "{env:EPF_USERNAME}",
-        "EPF_PASSWORD": "{env:EPF_PASSWORD}",
-        "EPF_DOWNLOAD_DIR": "~/epf/downloads"
+        "EPF_PASSWORD": "{env:EPF_PASSWORD}"
+      }
+    }
+  }
+}
+```
+
+**Claude Desktop** (`claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "epf": {
+      "command": "npx",
+      "args": ["-y", "@estermer/usps-epf-mcp"],
+      "env": {
+        "EPF_USERNAME": "your_username",
+        "EPF_PASSWORD": "your_password"
       }
     }
   }

@@ -1,13 +1,21 @@
 {
-  "name": "epf-mcp",
+  "name": "@estermer/usps-epf-mcp",
   "version": "0.1.0",
-  "description": "Local MCP server for USPS EPF V2 REST Services",
+  "description": "MCP server for USPS EPF V2 REST Services",
   "type": "module",
   "publishConfig": {
     "access": "public"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/estermer/usps-epf-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/estermer/usps-epf-mcp/issues"
+  },
+  "homepage": "https://github.com/estermer/usps-epf-mcp#readme",
   "bin": {
-    "epf-mcp": "dist/index.js"
+    "usps-epf-mcp": "dist/index.js"
   },
   "files": [
     "dist",
