@@ -1,0 +1,39 @@
+{
+  "name": "epf-mcp",
+  "version": "0.1.0",
+  "description": "Local MCP server for USPS EPF V2 REST Services",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "epf-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "codegen": "tsx scripts/codegen.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "@vitest/coverage-v8": "^2.1.2",
+    "eslint": "^9.11.1",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.7.0",
+    "vitest": "^2.1.2"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

@@ -2,7 +2,7 @@
 
 - **Date:** 2026-09-09
 - **Owner:** estermer
-- **Repo:** `~/develop/epf-mcp`
+- **Repo:** `~/develop/usps-epf-mcp`
 - **Upstream:** USPS EPF V2 REST Services (`https://epf.usps.gov/up`)
 
 ## 1. Purpose
@@ -168,7 +168,7 @@ npm run codegen   # writes src/openapi-types.ts + tests/fixtures/v3-api-docs.jso
 ## 10. Project layout
 
 ```
-~/develop/epf-mcp/
+~/develop/usps-epf-mcp/
 ├── package.json
 ├── tsconfig.json
 ├── .gitignore
@@ -228,7 +228,7 @@ Both `dist/` and `.env` live at the repo root alongside `src/` and `tests/`.
   "mcpServers": {
     "epf": {
       "command": "node",
-      "args": ["~/develop/epf-mcp/dist/index.js"],
+      "args": ["~/develop/usps-epf-mcp/dist/index.js"],
       "env": {
         "EPF_USERNAME": "<your username>",
         "EPF_PASSWORD": "<your password>"

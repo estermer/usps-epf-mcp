@@ -1,0 +1,865 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "EPF V2 Rest Services",
+    "version": "v3.1.0 - 2026-08-27-16:05"
+  },
+  "servers": [
+    {
+      "url": "https://epf.usps.gov/up"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/v2/epf/version": {
+      "get": {
+        "tags": [
+          "Authentication Services"
+        ],
+        "operationId": "version_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/VersionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Argument",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid Status Code": {
+                    "summary": "Invalid status code is sent in request",
+                    "description": "Invalid Status Code",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Invalid Status Code"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Database Update Failed",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Database Update Failed": {
+                    "summary": "Error occured updating the database",
+                    "description": "Database Update Failed",
+                    "value": {
+                      "statusCode": 409,
+                      "message": "Database Update Failed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/epf/login": {
+      "post": {
+        "tags": [
+          "Authentication Services"
+        ],
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAuthentication"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Argument",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid Status Code": {
+                    "summary": "Invalid status code is sent in request",
+                    "description": "Invalid Status Code",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Invalid Status Code"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication Failure",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Authentication Failure": {
+                    "summary": "Failed to Authenticate the user",
+                    "description": "Authentication Failure",
+                    "value": {
+                      "statusCode": 401,
+                      "message": "Failed to Authenticate"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Database Update Failed",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Database Update Failed": {
+                    "summary": "Error occured updating the database",
+                    "description": "Database Update Failed",
+                    "value": {
+                      "statusCode": 409,
+                      "message": "Database Update Failed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/epf/logout": {
+      "post": {
+        "tags": [
+          "Authentication Services"
+        ],
+        "operationId": "logout",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLogout"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalid Argument",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid Status Code": {
+                    "summary": "Invalid status code is sent in request",
+                    "description": "Invalid Status Code",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Invalid Status Code"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication Failure",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Authentication Failure": {
+                    "summary": "Failed to Authenticate the user",
+                    "description": "Authentication Failure",
+                    "value": {
+                      "statusCode": 401,
+                      "message": "Failed to Authenticate"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Database Update Failed",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Database Update Failed": {
+                    "summary": "Error occured updating the database",
+                    "description": "Database Update Failed",
+                    "value": {
+                      "statusCode": 409,
+                      "message": "Database Update Failed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/download/acslist": {
+      "get": {
+        "tags": [
+          "Download Services"
+        ],
+        "summary": "ACS Only List of Files",
+        "description": "The download/acslist function call is used to retrieve a list of all ACS files within scope for the user.<P><b>Note:</b> Multiple status parameters can be sent in the request or none to get all files.<br>N = new; S = download started; X = download cancelled; C = download completed.",
+        "operationId": "acsList",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "N",
+                  "C",
+                  "S",
+                  "X"
+                ]
+              }
+            }
+          },
+          {
+            "name": "fulfilledDate",
+            "in": "query",
+            "description": "Format:  YYYY-MM-DD",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Format:  YYYY-MM-DD"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FileListDefinition"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Argument",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid Status Code": {
+                    "summary": "Invalid status code is sent in request",
+                    "description": "Invalid Status Code",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Invalid Status Code"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Database Update Failed",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Database Update Failed": {
+                    "summary": "Error occured updating the database",
+                    "description": "Database Update Failed",
+                    "value": {
+                      "statusCode": 409,
+                      "message": "Database Update Failed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v2/download/dnldlist": {
+      "get": {
+        "tags": [
+          "Download Services"
+        ],
+        "summary": "All Available Files",
+        "description": "The download/dnldlist function call is used to retrieve a list of all EPF files within scope for the user.<p><b>Note:</b> Multiple status parameters can be sent in the request or none to get all files.<br>N = new; S = download started; X = download cancelled; C = download completed.",
+        "operationId": "dnldlist",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "N",
+                  "C",
+                  "S",
+                  "X"
+                ]
+              }
+            }
+          },
+          {
+            "name": "fulfilledDate",
+            "in": "query",
+            "description": "Format:  YYYY-MM-DD",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Format:  YYYY-MM-DD"
+            }
+          },
+          {
+            "name": "productCode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FileListDefinition"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Argument",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid Status Code": {
+                    "summary": "Invalid status code is sent in request",
+                    "description": "Invalid Status Code",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Invalid Status Code"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Database Update Failed",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Database Update Failed": {
+                    "summary": "Error occured updating the database",
+                    "description": "Database Update Failed",
+                    "value": {
+                      "statusCode": 409,
+                      "message": "Database Update Failed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v2/download/status": {
+      "post": {
+        "tags": [
+          "Download Services"
+        ],
+        "summary": "Update File Status",
+        "description": "The download/status function call is used to change the file status; either before being downloaded (set to “S” for started) and / or after a successful download (set to “C” for completed).<P>N = new; S = download started; X = download cancelled; C = download completed.",
+        "operationId": "updateStatus",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatusUpdate"
+              },
+              "examples": {
+                "Update to Completed": {
+                  "summary": "download completed exmaple",
+                  "description": "Update to Completed",
+                  "value": {
+                    "newstatus": "N",
+                    "fileid": "9999"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Invalid Argument",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid Status Code": {
+                    "summary": "Invalid status code is sent in request",
+                    "description": "Invalid Status Code",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Invalid Status Code"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication Failure",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Authentication Failure": {
+                    "summary": "Failed to Authenticate the user",
+                    "description": "Authentication Failure",
+                    "value": {
+                      "statusCode": 401,
+                      "message": "Failed to Authenticate"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Database Update Failed",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Database Update Failed": {
+                    "summary": "Error occured updating the database",
+                    "description": "Database Update Failed",
+                    "value": {
+                      "statusCode": 409,
+                      "message": "Database Update Failed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v2/download/epf/{fileId}": {
+      "get": {
+        "tags": [
+          "Download Services"
+        ],
+        "summary": "File Download",
+        "description": "The download/epf function call is used to download files from our servers.<BR>File ID is required and if your login has rights to that file, it will be returned as application/octet-stream.",
+        "operationId": "downloadEpfFile",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Argument",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid Status Code": {
+                    "summary": "Invalid status code is sent in request",
+                    "description": "Invalid Status Code",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Invalid Status Code"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Database Update Failed",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Database Update Failed": {
+                    "summary": "Error occured updating the database",
+                    "description": "Database Update Failed",
+                    "value": {
+                      "statusCode": 409,
+                      "message": "Database Update Failed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/epfupld/download/dnldlist": {
+      "post": {
+        "tags": [
+          "download-resource"
+        ],
+        "operationId": "downloadListPOST",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Argument",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid Status Code": {
+                    "summary": "Invalid status code is sent in request",
+                    "description": "Invalid Status Code",
+                    "value": {
+                      "statusCode": 400,
+                      "message": "Invalid Status Code"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Database Update Failed",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Database Update Failed": {
+                    "summary": "Error occured updating the database",
+                    "description": "Database Update Failed",
+                    "value": {
+                      "statusCode": 409,
+                      "message": "Database Update Failed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "UserAuthentication": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string"
+          },
+          "pword": {
+            "type": "string"
+          }
+        }
+      },
+      "AppUser": {
+        "type": "object",
+        "properties": {
+          "logonkey": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "USER",
+                "UPLOAD",
+                "READONLY",
+                "ADMIN"
+              ]
+            }
+          }
+        }
+      },
+      "StatusUpdate": {
+        "type": "object",
+        "properties": {
+          "newstatus": {
+            "type": "string",
+            "description": "N = new; S = download started; X = download cancelled; C = download completed.",
+            "enum": [
+              "C",
+              "N",
+              "S",
+              "X"
+            ]
+          },
+          "fileid": {
+            "type": "string"
+          }
+        }
+      },
+      "VersionResponse": {
+        "type": "object",
+        "properties": {
+          "response": {
+            "type": "string"
+          },
+          "messages": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "build": {
+            "type": "string"
+          }
+        }
+      },
+      "FileListDefinition": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "account": {
+            "type": "string"
+          },
+          "fileId": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "fulfilledDate": {
+            "type": "string"
+          },
+          "fileSize": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "productCode": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
