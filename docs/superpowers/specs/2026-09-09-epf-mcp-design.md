@@ -223,22 +223,29 @@ Both `dist/` and `.env` live at the repo root alongside `src/` and `tests/`.
 
 ### MCP snippet to add to `~/.config/opencode/opencode.jsonc`
 
-```json
+```jsonc
 {
-  "mcpServers": {
+  "mcp": {
     "epf": {
-      "command": "node",
-      "args": ["~/develop/usps-epf-mcp/dist/index.js"],
-      "env": {
-        "EPF_USERNAME": "<your username>",
-        "EPF_PASSWORD": "<your password>"
+      "type": "local",
+      "command": ["node", "~/develop/usps-epf-mcp/dist/index.js"],
+      "environment": {
+        "EPF_USERNAME": "{env:EPF_USERNAME}",
+        "EPF_PASSWORD": "{env:EPF_PASSWORD}",
+        "EPF_DOWNLOAD_DIR": "~/epf/downloads"
       }
     }
   }
 }
 ```
 
-User pastes this themselves. We do NOT touch `opencode.jsonc` from the build.
+Credentials live in the user's shell (`export EPF_USERNAME=…; export EPF_PASSWORD=…`)
+or `.bashrc`. opencode interpolates them at MCP launch via the `{env:VAR}`
+syntax, which is consistent with every other MCP entry in the file.
+
+Default policy: opencode's `permission: { "mcp_*": "ask" }` prompts the user
+on every tool invocation. Acceptable for an auth-bearing server; change to
+`"allow"` if the user wants frictionless tool calls.
 
 ## 13. Risks & decisions
 

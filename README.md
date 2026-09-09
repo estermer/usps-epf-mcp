@@ -12,22 +12,29 @@ npm install
 npm run build
 ```
 
-Create `~/.config/opencode/opencode.jsonc` (or merge into existing `mcpServers`):
+Create `~/.config/opencode/opencode.jsonc` (or merge into existing `mcp` block):
 
-```json
+```jsonc
 {
-  "mcpServers": {
+  "mcp": {
     "epf": {
-      "command": "node",
-      "args": ["~/develop/usps-epf-mcp/dist/index.js"],
-      "env": {
-        "EPF_USERNAME": "<your epf username>",
-        "EPF_PASSWORD": "<your epf password>",
+      "type": "local",
+      "command": ["node", "~/develop/usps-epf-mcp/dist/index.js"],
+      "environment": {
+        "EPF_USERNAME": "{env:EPF_USERNAME}",
+        "EPF_PASSWORD": "{env:EPF_PASSWORD}",
         "EPF_DOWNLOAD_DIR": "~/epf/downloads"
       }
     }
   }
 }
+```
+
+Export the credentials in your shell before launching opencode:
+
+```bash
+export EPF_USERNAME='your_epf_username'
+export EPF_PASSWORD='your_epf_password'
 ```
 
 Restart OpenCode. Try asking: *"Use the EPF MCP to get the server version."*
